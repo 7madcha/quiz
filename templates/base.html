@@ -11,9 +11,12 @@
 
         {% if user.is_authenticated %}
             <a href="{% url 'dashboard:home' %}">Dashboard</a>
+            
             {% if user.teacherprofile.status == 'approved' %}
                 <a href="{% url 'quizzes:teacher_quiz_list' %}">Teacher Quizzes</a>
                 <a href="{% url 'quizzes:teacher_ai_pending' %}">AI Validation</a>
+            {% else %}
+                <a href="{% url 'attempts:my_progress' %}">My Progress</a>
             {% endif %}
             <a href="{% url 'attempts:my_results' %}">My Results</a>
             <span>Hello {{ user.username }}</span>

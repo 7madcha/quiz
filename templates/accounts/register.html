@@ -5,7 +5,41 @@
 
 <form method="post">
     {% csrf_token %}
-    {{ form.as_p }}
+    <p>
+        {{ form.username.label_tag }}
+        {{ form.username }}
+        {{ form.username.errors }}
+    </p>
+
+    <p>
+        {{ form.password1.label_tag }}
+        {{ form.password1 }}
+        {{ form.password1.errors }}
+    </p>
+
+    <p>
+        {{ form.password2.label_tag }}
+        {{ form.password2 }}
+        {{ form.password2.errors }}
+    </p>
+
+    <p>
+        {{ form.request_teacher }}
+        {{ form.request_teacher.label_tag }}
+        {{ form.request_teacher.errors }}
+        <br>
+        <small>{{ form.request_teacher.help_text }}</small>
+    </p>
+
+    <p>
+        {{ form.domain.label_tag }}
+        {{ form.domain }}
+        {{ form.domain.errors }}
+        <br>
+        <small>{{ form.domain.help_text }}</small>
+    </p>
+
+    {{ form.non_field_errors }}
     <button type="submit">Register</button>
 </form>
 {% endblock %}

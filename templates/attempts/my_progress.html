@@ -1,0 +1,125 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<h2>My Progress</h2>
+
+{% if total_attempts == 0 %}
+    <p>No progress data yet. Pass your first quiz to see statistics.</p>
+
+    <p>
+        <a href="{% url 'quizzes:quiz_list' %}">Go to quizzes</a>
+    </p>
+{% else %}
+
+    <h3>Summary</h3>
+
+    <div>
+        <p><strong>Total quizzes passed:</strong> {{ total_attempts }}</p>
+        <p><strong>Average score:</strong> {{ average_percentage }}%</p>
+        <p><strong>Best score:</strong> {{ best_percentage }}%</p>
+    </div>
+
+    <hr>
+
+    <h3>Last 5 attempts</h3>
+
+    <table border="1" cellpadding="8">
+        <thead>
+            <tr>
+                <th>Quiz</th>
+                <th>Domain</th>
+                <th>Score</th>
+                <th>Percentage</th>
+                <th>Submitted at</th>
+                <th>Correction</th>
+            </tr>
+        </thead>
+
+        <tbody>
+            {% for item in last_5_attempts %}
+                <tr>
+                    <td>{{ item.quiz.title }}</td>
+                    <td>{{ item.domain }}</td>
+                    <td>{{ item.score }} / {{ item.total_points }}</td>
+                    <td>{{ item.percentage }}%</td>
+                    <td>{{ item.submitted_at }}</td>
+                    <td>
+                        <a href="{% url 'attempts:quiz_result' item.attempt.id %}">
+                            View correction
+                        </a>
+                    </td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+
+    <hr>
+
+    <h3>Scores by domain</h3>
+
+    {% if domain_stats %}
+        <table border="1" cellpadding="8">
+            <thead>
+                <tr>
+                    <th>Domain</th>
+                    <th>Attempts</th>
+                    <th>Average score</th>
+                </tr>
+            </thead>
+
+            <tbody>
+                {% for domain in domain_stats %}
+                    <tr>
+                        <td>{{ domain.domain }}</td>
+                        <td>{{ domain.attempts_count }}</td>
+                        <td>{{ domain.average_percentage }}%</td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    {% else %}
+        <p>No domain statistics available.</p>
+    {% endif %}
+
+    <hr>
+
+    <h3>Weak domains</h3>
+
+    {% if weak_domains %}
+        <p>These are the domains where your average score is the lowest:</p>
+
+        <table border="1" cellpadding="8">
+            <thead>
+                <tr>
+                    <th>Domain</th>
+                    <th>Average score</th>
+                    <th>Attempts</th>
+                </tr>
+            </thead>
+
+            <tbody>
+                {% for domain in weak_domains %}
+                    <tr>
+                        <td>{{ domain.domain }}</td>
+                        <td>{{ domain.average_percentage }}%</td>
+                        <td>{{ domain.attempts_count }}</td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    {% else %}
+        <p>No weak domains yet.</p>
+    {% endif %}
+
+{% endif %}
+
+<hr>
+
+<p>
+    <a href="{% url 'attempts:my_results' %}">My Results</a>
+</p>
+
+<p>
+    <a href="{% url 'quizzes:quiz_list' %}">Take another quiz</a>
+</p>
+{% endblock %}

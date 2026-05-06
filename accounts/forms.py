@@ -1,11 +1,17 @@
 from django.contrib.auth.forms import UserCreationForm
 from django import forms
+from django.db import transaction
 
 from quizzes.models import Domain
 from .models import TeacherProfile
 
 
-class TeacherRegistrationForm(UserCreationForm):
+class RegistrationForm(UserCreationForm):
+    request_teacher = forms.BooleanField(
+        required=False,
+        label="I want to register as a teacher",
+        help_text="Teacher accounts need admin approval before teacher features are available.",
+    )
     domain = forms.ModelChoiceField(
         queryset=Domain.objects.all(),
         required=False,
@@ -13,13 +19,14 @@ class TeacherRegistrationForm(UserCreationForm):
     )
 
     def save(self, commit=True):
-        user = super().save(commit=commit)
+        with transaction.atomic():
+            user = super().save(commit=commit)
 
-        if commit:
-            TeacherProfile.objects.create(
-                user=user,
-                domain=self.cleaned_data.get('domain'),
-                status='pending',
-            )
+            if commit and self.cleaned_data.get('request_teacher'):
+                TeacherProfile.objects.create(
+                    user=user,
+                    domain=self.cleaned_data.get('domain'),
+                    status='pending',
+                )
 
         return user
