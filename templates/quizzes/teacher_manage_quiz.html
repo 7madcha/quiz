@@ -1,41 +1,64 @@
 {% extends 'base.html' %}
 
 {% block content %}
-<h2>Manage Quiz</h2>
-
-<p>Title: {{ quiz.title }}</p>
-<p>Subject: {{ quiz.subject }}</p>
-<p>Domain: {{ quiz.domain }}</p>
-<p>Difficulty: {{ quiz.difficulty }}</p>
-<p>Status: {{ quiz.status }}</p>
-
-<p>
-    <a href="{% url 'quizzes:teacher_add_question' quiz.id %}">Add question</a>
-</p>
-
-<h3>Questions</h3>
-
-{% for question in quiz.questions.all %}
-    <div>
-        <p>{{ question.text }} - {{ question.points }} point(s)</p>
-        <p>
-            <a href="{% url 'quizzes:teacher_add_choice' question.id %}">Add choice</a>
-        </p>
-
-        {% for choice in question.choices.all %}
-            <p>
-                {{ choice.text }}
-                {% if choice.is_correct %}(correct){% endif %}
-            </p>
-        {% empty %}
-            <p>No choices yet.</p>
-        {% endfor %}
+<div class="content-card p-4 p-md-5 mb-4">
+    <div class="d-flex flex-column flex-lg-row align-items-lg-start justify-content-between gap-3">
+        <div>
+            <span class="eyebrow">Manage quiz</span>
+            <h2 class="page-title mt-2 mb-3">{{ quiz.title }}</h2>
+            <div class="d-flex flex-wrap gap-2">
+                <span class="badge text-bg-light border">Subject: {{ quiz.subject }}</span>
+                <span class="badge text-bg-light border">Domain: {{ quiz.domain }}</span>
+                <span class="badge text-bg-light border">Difficulty: {{ quiz.difficulty }}</span>
+                <span class="badge text-bg-primary">Status: {{ quiz.status }}</span>
+            </div>
+        </div>
+        <a class="btn btn-primary" href="{% url 'quizzes:teacher_add_question' quiz.id %}">
+            <i class="bi bi-plus-circle me-2"></i>Add question
+        </a>
     </div>
-{% empty %}
-    <p>No questions yet.</p>
-{% endfor %}
+</div>
 
-<p>
-    <a href="{% url 'quizzes:teacher_quiz_list' %}">Back to my quizzes</a>
-</p>
+<div class="d-flex align-items-center justify-content-between mb-3">
+    <h3 class="h5 fw-bold mb-0">Questions</h3>
+    <a class="btn btn-outline-primary btn-sm" href="{% url 'quizzes:teacher_quiz_list' %}">
+        <i class="bi bi-arrow-left me-1"></i>Back to my quizzes
+    </a>
+</div>
+
+<div class="d-flex flex-column gap-4">
+    {% for question in quiz.questions.all %}
+        <div class="question-card p-4">
+            <div class="d-flex flex-column flex-md-row justify-content-between gap-3 mb-3">
+                <div>
+                    <h4 class="h5 fw-bold mb-1">{{ question.text }}</h4>
+                    <span class="badge text-bg-light border">{{ question.points }} point(s)</span>
+                </div>
+                <a class="btn btn-light border btn-sm align-self-start" href="{% url 'quizzes:teacher_add_choice' question.id %}">
+                    <i class="bi bi-plus-square me-1"></i>Add choice
+                </a>
+            </div>
+
+            <div class="d-flex flex-column gap-2">
+                {% for choice in question.choices.all %}
+                    <div class="p-3 bg-light rounded-4 d-flex align-items-center justify-content-between gap-3">
+                        <span>{{ choice.text }}</span>
+                        {% if choice.is_correct %}
+                            <span class="badge text-bg-success"><i class="bi bi-check-circle me-1"></i>Correct</span>
+                        {% endif %}
+                    </div>
+                {% empty %}
+                    <p class="text-muted-soft mb-0">No choices yet.</p>
+                {% endfor %}
+            </div>
+        </div>
+    {% empty %}
+        <div class="empty-state text-center p-5">
+            <span class="icon-pill mb-3"><i class="bi bi-question-circle"></i></span>
+            <h4 class="h5 fw-bold">No questions yet</h4>
+            <p class="text-muted-soft mb-3">Add your first question to build this quiz.</p>
+            <a class="btn btn-primary" href="{% url 'quizzes:teacher_add_question' quiz.id %}">Add question</a>
+        </div>
+    {% endfor %}
+</div>
 {% endblock %}

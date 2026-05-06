@@ -1,17 +1,26 @@
 {% extends 'base.html' %}
 
 {% block content %}
-<h2>Add Question</h2>
+<div class="row justify-content-center">
+    <div class="col-lg-7">
+        <div class="content-card p-4 p-md-5">
+            <span class="eyebrow">Question builder</span>
+            <h2 class="page-title mt-2 mb-2">Add Question</h2>
+            <p class="text-muted-soft mb-4">Quiz: <strong>{{ quiz.title }}</strong></p>
 
-<p>Quiz: {{ quiz.title }}</p>
-
-<form method="post">
-    {% csrf_token %}
-    {{ form.as_p }}
-    <button type="submit">Add question</button>
-</form>
-
-<p>
-    <a href="{% url 'quizzes:teacher_manage_quiz' quiz.id %}">Back to quiz</a>
-</p>
+            <form method="post">
+                {% csrf_token %}
+                {{ form.as_p }}
+                <div class="d-flex flex-wrap gap-2 mt-4">
+                    <button class="btn btn-primary" type="submit">
+                        <i class="bi bi-plus-circle me-2"></i>Add question
+                    </button>
+                    <a class="btn btn-outline-primary" href="{% url 'quizzes:teacher_manage_quiz' quiz.id %}">
+                        <i class="bi bi-arrow-left me-2"></i>Back to quiz
+                    </a>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
 {% endblock %}

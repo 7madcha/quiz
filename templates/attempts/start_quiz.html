@@ -1,26 +1,49 @@
 {% extends 'base.html' %}
 
 {% block content %}
-<h2>{{ quiz.title }}</h2>
+<div class="d-flex flex-column flex-lg-row align-items-lg-center justify-content-between gap-3 mb-4">
+    <div>
+        <span class="eyebrow">Quiz attempt</span>
+        <h2 class="page-title mt-2 mb-1">{{ quiz.title }}</h2>
+        <p class="text-muted-soft mb-0">Choose one answer for each question, then submit for correction.</p>
+    </div>
+    <span class="badge text-bg-light border"><i class="bi bi-list-check me-1"></i>{{ quiz.questions.all|length }} questions</span>
+</div>
 
 <form method="post">
     {% csrf_token %}
 
-    {% for question in quiz.questions.all %}
+    <div class="d-flex flex-column gap-4">
+        {% for question in quiz.questions.all %}
+            <div class="question-card p-4">
+                <div class="d-flex align-items-start gap-3 mb-3">
+                    <span class="icon-pill flex-shrink-0">{{ forloop.counter }}</span>
+                    <div>
+                        <h3 class="h5 fw-bold mb-1">{{ question.text }}</h3>
+                        <span class="badge text-bg-light border">{{ question.points }} point(s)</span>
+                    </div>
+                </div>
+
+                <div class="d-flex flex-column gap-2">
+                    {% for choice in question.choices.all %}
+                        <label class="choice-option p-3 mb-0">
+                            <input class="me-2" type="radio" name="question_{{ question.id }}" value="{{ choice.id }}">
+                            {{ choice.text }}
+                        </label>
+                    {% endfor %}
+                </div>
+            </div>
+        {% endfor %}
+    </div>
+
+    <div class="content-card p-3 mt-4 d-flex flex-column flex-md-row align-items-md-center justify-content-between gap-3">
         <div>
-            <h3>{{ question.text }}</h3>
-
-            {% for choice in question.choices.all %}
-                <label>
-                    <input type="radio" name="question_{{ question.id }}" value="{{ choice.id }}">
-                    {{ choice.text }}
-                </label>
-                <br>
-            {% endfor %}
+            <div class="fw-bold">Ready to submit?</div>
+            <div class="text-muted-soft small">Your score and correction will be shown after submission.</div>
         </div>
-        <hr>
-    {% endfor %}
-
-    <button type="submit">Submit quiz</button>
+        <button class="btn btn-primary" type="submit">
+            <i class="bi bi-send-check me-2"></i>Submit quiz
+        </button>
+    </div>
 </form>
 {% endblock %}

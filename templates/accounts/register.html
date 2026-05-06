@@ -1,45 +1,84 @@
 {% extends 'base.html' %}
 
 {% block content %}
-<h2>Create account</h2>
+<div class="row justify-content-center">
+    <div class="col-lg-8">
+        <div class="auth-card p-4 p-md-5">
+            <div class="row g-4 align-items-start">
+                <div class="col-md-5">
+                    <span class="eyebrow">Join Quiz IA</span>
+                    <h2 class="page-title h1 mt-2 mb-3">Create your learning account.</h2>
+                    <p class="text-muted-soft">
+                        Register as a learner immediately, or request teacher access for admin approval.
+                    </p>
+                    <div class="d-flex flex-column gap-3 mt-4">
+                        <div class="d-flex gap-3">
+                            <span class="icon-pill flex-shrink-0"><i class="bi bi-lightning-charge"></i></span>
+                            <div>
+                                <div class="fw-bold">Learner access</div>
+                                <div class="text-muted-soft small">Take quizzes and track progress right away.</div>
+                            </div>
+                        </div>
+                        <div class="d-flex gap-3">
+                            <span class="icon-pill flex-shrink-0"><i class="bi bi-person-workspace"></i></span>
+                            <div>
+                                <div class="fw-bold">Teacher request</div>
+                                <div class="text-muted-soft small">Teacher tools unlock after admin approval.</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
 
-<form method="post">
-    {% csrf_token %}
-    <p>
-        {{ form.username.label_tag }}
-        {{ form.username }}
-        {{ form.username.errors }}
-    </p>
+                <div class="col-md-7">
+                    <form method="post">
+                        {% csrf_token %}
+                        <div class="mb-3">
+                            {{ form.username.label_tag }}
+                            {{ form.username }}
+                            {{ form.username.errors }}
+                        </div>
 
-    <p>
-        {{ form.password1.label_tag }}
-        {{ form.password1 }}
-        {{ form.password1.errors }}
-    </p>
+                        <div class="mb-3">
+                            {{ form.password1.label_tag }}
+                            {{ form.password1 }}
+                            {{ form.password1.errors }}
+                        </div>
 
-    <p>
-        {{ form.password2.label_tag }}
-        {{ form.password2 }}
-        {{ form.password2.errors }}
-    </p>
+                        <div class="mb-3">
+                            {{ form.password2.label_tag }}
+                            {{ form.password2 }}
+                            {{ form.password2.errors }}
+                        </div>
 
-    <p>
-        {{ form.request_teacher }}
-        {{ form.request_teacher.label_tag }}
-        {{ form.request_teacher.errors }}
-        <br>
-        <small>{{ form.request_teacher.help_text }}</small>
-    </p>
+                        <div class="content-card p-3 mb-3 shadow-none">
+                            <div class="form-check">
+                                {{ form.request_teacher }}
+                                {{ form.request_teacher.label_tag }}
+                            </div>
+                            {{ form.request_teacher.errors }}
+                            <small>{{ form.request_teacher.help_text }}</small>
+                        </div>
 
-    <p>
-        {{ form.domain.label_tag }}
-        {{ form.domain }}
-        {{ form.domain.errors }}
-        <br>
-        <small>{{ form.domain.help_text }}</small>
-    </p>
+                        <div class="mb-3">
+                            {{ form.domain.label_tag }}
+                            {{ form.domain }}
+                            {{ form.domain.errors }}
+                            <small>{{ form.domain.help_text }}</small>
+                        </div>
 
-    {{ form.non_field_errors }}
-    <button type="submit">Register</button>
-</form>
+                        {{ form.non_field_errors }}
+                        <button class="btn btn-primary w-100" type="submit">
+                            <i class="bi bi-person-plus me-2"></i>Register
+                        </button>
+                    </form>
+
+                    <div class="text-center mt-4">
+                        <span class="text-muted-soft">Already have an account?</span>
+                        <a class="fw-bold" href="{% url 'accounts:login' %}">Login</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
 {% endblock %}

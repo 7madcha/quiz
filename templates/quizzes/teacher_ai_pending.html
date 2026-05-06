@@ -1,14 +1,37 @@
 {% extends 'base.html' %}
 
 {% block content %}
-<h2>AI Quizzes Pending Validation</h2>
+<div class="d-flex flex-column flex-lg-row align-items-lg-center justify-content-between gap-3 mb-4">
+    <div>
+        <span class="eyebrow">AI validation</span>
+        <h2 class="page-title mt-2 mb-1">AI Quizzes Pending Validation</h2>
+        <p class="text-muted-soft mb-0">Review generated quizzes for your domain before they become usable content.</p>
+    </div>
+</div>
 
-{% for quiz in quizzes %}
-    <p>
-        {{ quiz.title }} - {{ quiz.subject }} - {{ quiz.difficulty }} - {{ quiz.domain }}
-        <a href="{% url 'quizzes:teacher_review_ai_quiz' quiz.id %}">Review</a>
-    </p>
-{% empty %}
-    <p>No AI quizzes pending validation for your domain.</p>
-{% endfor %}
+<div class="row g-4">
+    {% for quiz in quizzes %}
+        <div class="col-md-6 col-xl-4">
+            <div class="quiz-card lift-hover h-100 p-4">
+                <div class="d-flex align-items-start justify-content-between gap-3 mb-3">
+                    <span class="icon-pill"><i class="bi bi-stars"></i></span>
+                    <span class="badge text-bg-warning">{{ quiz.status }}</span>
+                </div>
+                <h3 class="h5 fw-bold mb-2">{{ quiz.title }}</h3>
+                <p class="text-muted-soft mb-3">{{ quiz.subject }} · {{ quiz.difficulty }} · {{ quiz.domain }}</p>
+                <a class="btn btn-primary btn-sm" href="{% url 'quizzes:teacher_review_ai_quiz' quiz.id %}">
+                    <i class="bi bi-search me-1"></i>Review
+                </a>
+            </div>
+        </div>
+    {% empty %}
+        <div class="col-12">
+            <div class="empty-state text-center p-5">
+                <span class="icon-pill mb-3"><i class="bi bi-check2-circle"></i></span>
+                <h3 class="h5 fw-bold">No pending AI quizzes</h3>
+                <p class="text-muted-soft mb-0">Generated quizzes for your domain will appear here for validation.</p>
+            </div>
+        </div>
+    {% endfor %}
+</div>
 {% endblock %}

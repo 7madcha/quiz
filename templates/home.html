@@ -1,6 +1,74 @@
 {% extends 'base.html' %}
 
 {% block content %}
-<h1>Welcome to Quiz IA Platform</h1>
-<p>Create, generate, pass, and correct quizzes.</p>
+<section class="hero-section">
+    <div class="hero-panel">
+        <div class="row g-0 align-items-stretch">
+            <div class="col-lg-7 p-4 p-md-5">
+                <span class="eyebrow">Education platform</span>
+                <h1 class="display-5 page-title mt-3 mb-3">Build skills with quizzes, progress tracking, and teacher validation.</h1>
+                <p class="lead text-muted-soft mb-4">
+                    Practice published quizzes, review your results, track weak domains, and generate draft AI quizzes for teacher approval.
+                </p>
+                <div class="d-flex flex-wrap gap-2">
+                    <a class="btn btn-primary btn-lg" href="{% url 'quizzes:quiz_list' %}">
+                        <i class="bi bi-play-circle me-2"></i>Start learning
+                    </a>
+                    {% if user.is_authenticated %}
+                        <a class="btn btn-outline-primary btn-lg" href="{% url 'dashboard:home' %}">
+                            <i class="bi bi-speedometer2 me-2"></i>Go to dashboard
+                        </a>
+                    {% else %}
+                        <a class="btn btn-outline-primary btn-lg" href="{% url 'accounts:register' %}">
+                            <i class="bi bi-person-plus me-2"></i>Create account
+                        </a>
+                    {% endif %}
+                </div>
+            </div>
+            <div class="col-lg-5 hero-visual d-flex align-items-center justify-content-center p-4">
+                <div class="content-card p-4 text-white bg-transparent border-light border-opacity-25 shadow-none">
+                    <div class="d-flex align-items-center gap-3 mb-3">
+                        <span class="icon-pill bg-white text-primary"><i class="bi bi-bar-chart-line-fill"></i></span>
+                        <div>
+                            <div class="fw-bold">Progress dashboard</div>
+                            <div class="small opacity-75">Scores, domains, corrections</div>
+                        </div>
+                    </div>
+                    <div class="progress bg-white bg-opacity-25 mb-3">
+                        <div class="progress-bar bg-white" style="width: 72%"></div>
+                    </div>
+                    <div class="d-flex gap-2 flex-wrap">
+                        <span class="badge bg-white text-primary">AI validation</span>
+                        <span class="badge bg-white text-primary">Teacher tools</span>
+                        <span class="badge bg-white text-primary">Quiz results</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section class="row g-4 mt-2">
+    <div class="col-md-4">
+        <div class="content-card lift-hover h-100 p-4">
+            <span class="icon-pill mb-3"><i class="bi bi-journal-text"></i></span>
+            <h3 class="h5 fw-bold">Practice quizzes</h3>
+            <p class="text-muted-soft mb-0">Take published quizzes and get instant correction with explanations.</p>
+        </div>
+    </div>
+    <div class="col-md-4">
+        <div class="content-card lift-hover h-100 p-4">
+            <span class="icon-pill mb-3"><i class="bi bi-graph-up"></i></span>
+            <h3 class="h5 fw-bold">Track growth</h3>
+            <p class="text-muted-soft mb-0">Review results and progress by domain to see where to focus next.</p>
+        </div>
+    </div>
+    <div class="col-md-4">
+        <div class="content-card lift-hover h-100 p-4">
+            <span class="icon-pill mb-3"><i class="bi bi-shield-check"></i></span>
+            <h3 class="h5 fw-bold">Teacher workflow</h3>
+            <p class="text-muted-soft mb-0">Approved teachers create quizzes and validate AI-generated content.</p>
+        </div>
+    </div>
+</section>
 {% endblock %}

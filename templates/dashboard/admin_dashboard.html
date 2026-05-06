@@ -1,13 +1,50 @@
 {% extends 'base.html' %}
 
 {% block content %}
-<h2>Admin Dashboard</h2>
+<div class="d-flex flex-column flex-lg-row align-items-lg-center justify-content-between gap-3 mb-4">
+    <div>
+        <span class="eyebrow">Admin dashboard</span>
+        <h2 class="page-title mt-2 mb-1">Platform overview</h2>
+        <p class="text-muted-soft mb-0">Monitor content volume and open Django admin for approvals.</p>
+    </div>
+    <a class="btn btn-primary" href="/admin/">
+        <i class="bi bi-shield-lock me-2"></i>Open Django Admin
+    </a>
+</div>
 
-<p>Total quizzes: {{ total_quizzes }}</p>
-<p>Published quizzes: {{ published_quizzes }}</p>
-<p>Total attempts: {{ total_attempts }}</p>
-
-<p>
-    <a href="/admin/">Open Django Admin</a>
-</p>
+<div class="row g-4">
+    <div class="col-md-4">
+        <div class="stat-card lift-hover">
+            <div class="d-flex align-items-center justify-content-between">
+                <div>
+                    <div class="text-muted-soft small fw-bold text-uppercase">Total quizzes</div>
+                    <div class="stat-value">{{ total_quizzes }}</div>
+                </div>
+                <span class="icon-pill"><i class="bi bi-collection"></i></span>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-4">
+        <div class="stat-card lift-hover">
+            <div class="d-flex align-items-center justify-content-between">
+                <div>
+                    <div class="text-muted-soft small fw-bold text-uppercase">Published quizzes</div>
+                    <div class="stat-value">{{ published_quizzes }}</div>
+                </div>
+                <span class="icon-pill"><i class="bi bi-check2-circle"></i></span>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-4">
+        <div class="stat-card lift-hover">
+            <div class="d-flex align-items-center justify-content-between">
+                <div>
+                    <div class="text-muted-soft small fw-bold text-uppercase">Total attempts</div>
+                    <div class="stat-value">{{ total_attempts }}</div>
+                </div>
+                <span class="icon-pill"><i class="bi bi-activity"></i></span>
+            </div>
+        </div>
+    </div>
+</div>
 {% endblock %}

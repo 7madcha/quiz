@@ -1,15 +1,21 @@
 {% extends 'base.html' %}
 
 {% block content %}
-<h2>AI Quiz Generated</h2>
-
-<p>AI quiz generated and sent for validation.</p>
-
-<p>
-    <a href="{% url 'ai_generator:generate_quiz' %}">Generate another quiz</a>
-</p>
-
-<p>
-    <a href="{% url 'quizzes:quiz_list' %}">View published quizzes</a>
-</p>
+<div class="row justify-content-center">
+    <div class="col-md-8 col-lg-6">
+        <div class="empty-state text-center p-5">
+            <span class="icon-pill mb-3"><i class="bi bi-check2-circle"></i></span>
+            <h2 class="page-title h3">AI Quiz Generated</h2>
+            <p class="text-muted-soft mb-4">AI quiz generated and sent for validation.</p>
+            <div class="d-flex flex-wrap justify-content-center gap-2">
+                <a class="btn btn-primary" href="{% url 'ai_generator:generate_quiz' %}">
+                    <i class="bi bi-stars me-2"></i>Generate another quiz
+                </a>
+                <a class="btn btn-outline-primary" href="{% url 'quizzes:quiz_list' %}">
+                    <i class="bi bi-journal-check me-2"></i>View published quizzes
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
 {% endblock %}
