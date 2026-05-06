@@ -1,0 +1,17 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<h2>Published quizzes</h2>
+
+{% for quiz in quizzes %}
+    <div>
+        <h3>{{ quiz.title }}</h3>
+        <p>Subject: {{ quiz.subject }}</p>
+        <p>Difficulty: {{ quiz.difficulty }}</p>
+        <a href="{% url 'quizzes:quiz_detail' quiz.id %}">View quiz</a>
+    </div>
+    <hr>
+{% empty %}
+    <p>No published quizzes yet.</p>
+{% endfor %}
+{% endblock %}

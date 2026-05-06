@@ -1,0 +1,11 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<h2>{{ quiz.title }}</h2>
+
+<p>Subject: {{ quiz.subject }}</p>
+<p>Difficulty: {{ quiz.difficulty }}</p>
+<p>Status: {{ quiz.status }}</p>
+
+<a href="{% url 'attempts:start_quiz' quiz.id %}">Start quiz</a>
+{% endblock %}
