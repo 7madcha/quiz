@@ -1,0 +1,13 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<h2>Admin Dashboard</h2>
+
+<p>Total quizzes: {{ total_quizzes }}</p>
+<p>Published quizzes: {{ published_quizzes }}</p>
+<p>Total attempts: {{ total_attempts }}</p>
+
+<p>
+    <a href="/admin/">Open Django Admin</a>
+</p>
+{% endblock %}

@@ -1,0 +1,26 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<h2>Learner Dashboard</h2>
+
+<p>Welcome, {{ user.username }}.</p>
+
+<p>
+    <a href="{% url 'quizzes:quiz_list' %}">Pass a quiz</a>
+</p>
+
+<p>
+    <a href="{% url 'attempts:my_results' %}">View my results</a>
+</p>
+
+<h3>Latest attempts</h3>
+
+{% for attempt in attempts %}
+    <p>
+        {{ attempt.quiz.title }} - Score: {{ attempt.score }}
+        <a href="{% url 'attempts:quiz_result' attempt.id %}">View</a>
+    </p>
+{% empty %}
+    <p>No attempts yet.</p>
+{% endfor %}
+{% endblock %}

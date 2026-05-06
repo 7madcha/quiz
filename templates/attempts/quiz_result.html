@@ -1,0 +1,42 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<h2>Quiz Result</h2>
+
+<h3>{{ attempt.quiz.title }}</h3>
+
+<p>Your score: {{ attempt.score }} / {{ total_points }}</p>
+<p>Status: {{ attempt.status }}</p>
+
+<hr>
+
+<h3>Correction</h3>
+
+{% for answer in answers %}
+    <div>
+        <h4>{{ answer.question.text }}</h4>
+
+        <p>Your answer:
+            {% if answer.selected_choice %}
+                {{ answer.selected_choice.text }}
+            {% else %}
+                No answer
+            {% endif %}
+        </p>
+
+        {% if answer.is_correct %}
+            <p style="color: green;">Correct</p>
+        {% else %}
+            <p style="color: red;">Wrong</p>
+        {% endif %}
+
+        <p>Correct answer: {{ answer.question.correct_answer }}</p>
+        <p>Explanation: {{ answer.question.explanation }}</p>
+        <p>Points: {{ answer.score }} / {{ answer.question.points }}</p>
+    </div>
+
+    <hr>
+{% endfor %}
+
+<a href="{% url 'quizzes:quiz_list' %}">Back to quizzes</a>
+{% endblock %}

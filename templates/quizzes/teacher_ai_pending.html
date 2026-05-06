@@ -1,0 +1,14 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<h2>AI Quizzes Pending Validation</h2>
+
+{% for quiz in quizzes %}
+    <p>
+        {{ quiz.title }} - {{ quiz.subject }} - {{ quiz.difficulty }} - {{ quiz.domain }}
+        <a href="{% url 'quizzes:teacher_review_ai_quiz' quiz.id %}">Review</a>
+    </p>
+{% empty %}
+    <p>No AI quizzes pending validation for your domain.</p>
+{% endfor %}
+{% endblock %}

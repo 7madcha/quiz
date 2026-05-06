@@ -29,4 +29,5 @@ urlpatterns = [
     path('quizzes/', include('quizzes.urls')),
     path('attempts/', include('attempts.urls')),
     path('ai/', include('ai_generator.urls')),
+    path('dashboard/', include('dashboard.urls')),
 ]

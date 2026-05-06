@@ -1,0 +1,15 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<h2>AI Quiz Generated</h2>
+
+<p>AI quiz generated and sent for validation.</p>
+
+<p>
+    <a href="{% url 'ai_generator:generate_quiz' %}">Generate another quiz</a>
+</p>
+
+<p>
+    <a href="{% url 'quizzes:quiz_list' %}">View published quizzes</a>
+</p>
+{% endblock %}

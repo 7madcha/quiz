@@ -1,0 +1,41 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<h2>My Results</h2>
+
+{% if attempts %}
+    <table border="1" cellpadding="8">
+        <thead>
+            <tr>
+                <th>Quiz</th>
+                <th>Domain</th>
+                <th>Difficulty</th>
+                <th>Score</th>
+                <th>Status</th>
+                <th>Submitted at</th>
+                <th>Details</th>
+            </tr>
+        </thead>
+
+        <tbody>
+            {% for attempt in attempts %}
+                <tr>
+                    <td>{{ attempt.quiz.title }}</td>
+                    <td>{{ attempt.quiz.domain.name }}</td>
+                    <td>{{ attempt.quiz.difficulty }}</td>
+                    <td>{{ attempt.score }}</td>
+                    <td>{{ attempt.status }}</td>
+                    <td>{{ attempt.submitted_at }}</td>
+                    <td>
+                        <a href="{% url 'attempts:quiz_result' attempt.id %}">
+                            View correction
+                        </a>
+                    </td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+{% else %}
+    <p>You have not completed any quizzes yet.</p>
+{% endif %}
+{% endblock %}

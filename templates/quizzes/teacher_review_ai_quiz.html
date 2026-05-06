@@ -1,0 +1,47 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<h2>Review AI Quiz</h2>
+
+<p>Title: {{ quiz.title }}</p>
+<p>Subject: {{ quiz.subject }}</p>
+<p>Difficulty: {{ quiz.difficulty }}</p>
+<p>Domain: {{ quiz.domain }}</p>
+<p>Status: {{ quiz.status }}</p>
+
+<form method="post" action="{% url 'quizzes:teacher_approve_ai_quiz' quiz.id %}">
+    {% csrf_token %}
+    <button type="submit">Approve</button>
+</form>
+
+<form method="post" action="{% url 'quizzes:teacher_reject_ai_quiz' quiz.id %}">
+    {% csrf_token %}
+    <button type="submit">Reject</button>
+</form>
+
+<h3>Questions</h3>
+
+{% for question in quiz.questions.all %}
+    <div>
+        <p>{{ question.text }}</p>
+        <p>Correct answer: {{ question.correct_answer }}</p>
+        <p>Explanation: {{ question.explanation }}</p>
+
+        <h4>Choices</h4>
+        {% for choice in question.choices.all %}
+            <p>
+                {{ choice.text }}
+                {% if choice.is_correct %}(correct){% endif %}
+            </p>
+        {% empty %}
+            <p>No choices yet.</p>
+        {% endfor %}
+    </div>
+{% empty %}
+    <p>No questions found.</p>
+{% endfor %}
+
+<p>
+    <a href="{% url 'quizzes:teacher_ai_pending' %}">Back to pending AI quizzes</a>
+</p>
+{% endblock %}

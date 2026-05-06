@@ -10,6 +10,12 @@
         <a href="{% url 'ai_generator:generate_quiz' %}">Generate AI Quiz</a>
 
         {% if user.is_authenticated %}
+            <a href="{% url 'dashboard:home' %}">Dashboard</a>
+            {% if user.teacherprofile.status == 'approved' %}
+                <a href="{% url 'quizzes:teacher_quiz_list' %}">Teacher Quizzes</a>
+                <a href="{% url 'quizzes:teacher_ai_pending' %}">AI Validation</a>
+            {% endif %}
+            <a href="{% url 'attempts:my_results' %}">My Results</a>
             <span>Hello {{ user.username }}</span>
             <a href="{% url 'accounts:logout' %}">Logout</a>
         {% else %}
@@ -19,6 +25,12 @@
     </nav>
 
     <hr>
+
+    {% if messages %}
+        {% for message in messages %}
+            <p>{{ message }}</p>
+        {% endfor %}
+    {% endif %}
 
     {% block content %}
     {% endblock %}

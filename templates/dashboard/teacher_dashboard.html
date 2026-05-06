@@ -1,0 +1,30 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<h2>Teacher Dashboard</h2>
+
+<p>Welcome, {{ user.username }}.</p>
+
+<p>
+    <a href="{% url 'quizzes:teacher_quiz_list' %}">My quizzes</a>
+</p>
+
+<p>
+    <a href="{% url 'quizzes:teacher_create_quiz' %}">Create quiz</a>
+</p>
+
+<p>
+    <a href="{% url 'quizzes:teacher_ai_pending' %}">AI quizzes pending validation</a>
+</p>
+
+<h3>My quizzes</h3>
+
+{% for quiz in quizzes %}
+    <p>
+        {{ quiz.title }} - {{ quiz.status }}
+        <a href="{% url 'quizzes:teacher_manage_quiz' quiz.id %}">Manage</a>
+    </p>
+{% empty %}
+    <p>No quizzes created yet.</p>
+{% endfor %}
+{% endblock %}

@@ -1,0 +1,13 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<h2>Register as teacher</h2>
+
+<p>Your teacher account will need admin approval before teacher features are available.</p>
+
+<form method="post">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <button type="submit">Register as teacher</button>
+</form>
+{% endblock %}

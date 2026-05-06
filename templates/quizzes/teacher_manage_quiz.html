@@ -1,0 +1,41 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<h2>Manage Quiz</h2>
+
+<p>Title: {{ quiz.title }}</p>
+<p>Subject: {{ quiz.subject }}</p>
+<p>Domain: {{ quiz.domain }}</p>
+<p>Difficulty: {{ quiz.difficulty }}</p>
+<p>Status: {{ quiz.status }}</p>
+
+<p>
+    <a href="{% url 'quizzes:teacher_add_question' quiz.id %}">Add question</a>
+</p>
+
+<h3>Questions</h3>
+
+{% for question in quiz.questions.all %}
+    <div>
+        <p>{{ question.text }} - {{ question.points }} point(s)</p>
+        <p>
+            <a href="{% url 'quizzes:teacher_add_choice' question.id %}">Add choice</a>
+        </p>
+
+        {% for choice in question.choices.all %}
+            <p>
+                {{ choice.text }}
+                {% if choice.is_correct %}(correct){% endif %}
+            </p>
+        {% empty %}
+            <p>No choices yet.</p>
+        {% endfor %}
+    </div>
+{% empty %}
+    <p>No questions yet.</p>
+{% endfor %}
+
+<p>
+    <a href="{% url 'quizzes:teacher_quiz_list' %}">Back to my quizzes</a>
+</p>
+{% endblock %}

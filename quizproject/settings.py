@@ -42,6 +42,7 @@ INSTALLED_APPS = [
     'quizzes',
     'attempts',
     'ai_generator',
+     'dashboard',
 ]
 
 MIDDLEWARE = [
