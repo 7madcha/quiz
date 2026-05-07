@@ -1,0 +1,135 @@
+FAKE TEST DATA
+==============
+
+Domains
+-------
+1. Development
+   Description: Programming, web development, software engineering, and application design.
+
+2. Data
+   Description: Databases, analytics, statistics, machine learning, and data handling.
+
+
+Users
+-----
+Teacher account:
+Username: houssam
+Password: rhdir2005
+Domain: Development
+Teacher status: approved
+
+Teacher account:
+Username: yassine
+Password: abaki2005
+Domain: Data
+Teacher status: approved
+
+Student account:
+Username: youssef
+Password: zyadni2005
+
+Existing superuser:
+Username: saad
+Password: saad
+
+
+Published Quizzes
+-----------------
+Quiz: Python Basics Check
+Subject: Python
+Domain: Development
+Difficulty: easy
+Created by: houssam
+Status: published
+
+Questions:
+1. Which keyword defines a function in Python?
+   Correct answer: def
+   Choices: def, func, function, method
+
+2. Which type stores key-value pairs?
+   Correct answer: dict
+   Choices: list, tuple, dict, set
+
+3. What does len([1, 2, 3]) return?
+   Correct answer: 3
+   Choices: 2, 3, 4, None
+
+
+Quiz: HTML and CSS Starter Quiz
+Subject: Web Development
+Domain: Development
+Difficulty: medium
+Created by: houssam
+Status: published
+
+Questions:
+1. Which HTML tag creates a link?
+   Correct answer: a
+   Choices: a, link, href, url
+
+2. Which CSS property changes text color?
+   Correct answer: color
+   Choices: font, text-style, color, paint
+
+
+Quiz: Data Fundamentals
+Subject: Data
+Domain: Data
+Difficulty: easy
+Created by: yassine
+Status: published
+
+Questions:
+1. Which SQL command reads data from a table?
+   Correct answer: SELECT
+   Choices: SELECT, READ, GET, OPEN
+
+2. What is the average also called?
+   Correct answer: Mean
+   Choices: Mode, Median, Mean, Range
+
+3. Which file format commonly stores tabular data with commas?
+   Correct answer: CSV
+   Choices: CSV, PNG, PDF, MP3
+
+
+Pending AI Quiz
+---------------
+Quiz: AI Generated SQL Practice
+Subject: SQL
+Domain: Data
+Difficulty: medium
+Created by: yassine
+Status: pending
+AI generated: yes
+
+Questions:
+1. Which clause filters rows in SQL?
+   Correct answer: WHERE
+   Choices: WHERE, ORDER, GROUP, TABLE
+
+2. Which SQL keyword sorts query results?
+   Correct answer: ORDER BY
+   Choices: SORT, ORDER BY, ALIGN, FILTER
+
+
+Student Attempt
+---------------
+Student: youssef
+Quiz: Python Basics Check
+Status: submitted
+Score: 2
+
+Answers:
+1. Which keyword defines a function in Python?
+   Selected: def
+   Correct: yes
+
+2. Which type stores key-value pairs?
+   Selected: list
+   Correct: no
+
+3. What does len([1, 2, 3]) return?
+   Selected: 3
+   Correct: yes

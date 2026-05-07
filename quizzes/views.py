@@ -39,6 +39,27 @@ def get_teacher_pending_ai_quiz(user, quiz_id):
     )
 
 
+def get_quiz_publish_issues(quiz):
+    questions = list(quiz.questions.all())
+    issues = []
+
+    if not questions:
+        issues.append('Add at least one question before publishing.')
+        return issues
+
+    for question in questions:
+        choices = list(question.choices.all())
+
+        if not choices:
+            issues.append(f'Question "{question.text[:80]}" has no choices.')
+            continue
+
+        if not any(choice.is_correct for choice in choices):
+            issues.append(f'Question "{question.text[:80]}" has no correct choice.')
+
+    return issues
+
+
 def home(request):
     return render(request, 'home.html')
 
@@ -49,7 +70,7 @@ def quiz_list(request):
 
 
 def quiz_detail(request, quiz_id):
-    quiz = get_object_or_404(Quiz, id=quiz_id)
+    quiz = get_object_or_404(Quiz, id=quiz_id, status='published')
     return render(request, 'quizzes/quiz_detail.html', {'quiz': quiz})
 
 
@@ -72,6 +93,7 @@ def teacher_create_quiz(request):
             quiz = form.save(commit=False)
             quiz.created_by = request.user
             quiz.is_ai_generated = False
+            quiz.status = 'draft'
             quiz.save()
             return redirect('quizzes:teacher_manage_quiz', quiz_id=quiz.id)
     else:
@@ -95,7 +117,47 @@ def teacher_manage_quiz(request, quiz_id):
 
     return render(request, 'quizzes/teacher_manage_quiz.html', {
         'quiz': quiz,
+        'publish_issues': get_quiz_publish_issues(quiz),
     })
+
+
+@teacher_required
+@require_POST
+def teacher_publish_quiz(request, quiz_id):
+    quiz = get_object_or_404(
+        Quiz.objects.prefetch_related('questions', 'questions__choices'),
+        id=quiz_id,
+        created_by=request.user,
+    )
+
+    if quiz.status not in ['draft', 'approved']:
+        messages.error(request, 'Only draft or approved quizzes can be published.')
+        return redirect('quizzes:teacher_manage_quiz', quiz_id=quiz.id)
+
+    publish_issues = get_quiz_publish_issues(quiz)
+    if publish_issues:
+        messages.error(request, publish_issues[0])
+        return redirect('quizzes:teacher_manage_quiz', quiz_id=quiz.id)
+
+    quiz.status = 'published'
+    quiz.save(update_fields=['status'])
+    messages.success(request, 'Quiz published.')
+    return redirect('quizzes:teacher_manage_quiz', quiz_id=quiz.id)
+
+
+@teacher_required
+@require_POST
+def teacher_unpublish_quiz(request, quiz_id):
+    quiz = get_object_or_404(Quiz, id=quiz_id, created_by=request.user)
+
+    if quiz.status != 'published':
+        messages.error(request, 'Only published quizzes can be unpublished.')
+        return redirect('quizzes:teacher_manage_quiz', quiz_id=quiz.id)
+
+    quiz.status = 'approved' if quiz.is_ai_generated else 'draft'
+    quiz.save(update_fields=['status'])
+    messages.success(request, 'Quiz unpublished.')
+    return redirect('quizzes:teacher_manage_quiz', quiz_id=quiz.id)
 
 
 @teacher_required

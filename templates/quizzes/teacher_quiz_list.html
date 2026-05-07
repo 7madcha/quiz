@@ -18,13 +18,25 @@
             <div class="quiz-card lift-hover h-100 p-4">
                 <div class="d-flex align-items-start justify-content-between gap-3 mb-3">
                     <span class="icon-pill"><i class="bi bi-easel2"></i></span>
-                    <span class="badge text-bg-light border">{{ quiz.status }}</span>
+                    {% if quiz.status == 'published' %}
+                        <span class="badge text-bg-success">{{ quiz.get_status_display }}</span>
+                    {% elif quiz.status == 'pending' %}
+                        <span class="badge text-bg-warning">{{ quiz.get_status_display }}</span>
+                    {% elif quiz.status == 'rejected' %}
+                        <span class="badge text-bg-danger">{{ quiz.get_status_display }}</span>
+                    {% elif quiz.status == 'approved' %}
+                        <span class="badge text-bg-primary">{{ quiz.get_status_display }}</span>
+                    {% else %}
+                        <span class="badge text-bg-light border">{{ quiz.get_status_display }}</span>
+                    {% endif %}
                 </div>
                 <h3 class="h5 fw-bold mb-2">{{ quiz.title }}</h3>
                 <p class="text-muted-soft mb-3">{{ quiz.domain }}</p>
-                <a class="btn btn-primary btn-sm" href="{% url 'quizzes:teacher_manage_quiz' quiz.id %}">
-                    <i class="bi bi-sliders me-1"></i>Manage
-                </a>
+                <div class="d-flex flex-wrap gap-2">
+                    <a class="btn btn-primary btn-sm" href="{% url 'quizzes:teacher_manage_quiz' quiz.id %}">
+                        <i class="bi bi-sliders me-1"></i>Manage
+                    </a>
+                </div>
             </div>
         </div>
     {% empty %}

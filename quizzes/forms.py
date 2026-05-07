@@ -6,11 +6,10 @@ from .models import Choice, Question, Quiz
 class QuizForm(forms.ModelForm):
     class Meta:
         model = Quiz
-        fields = ['title', 'subject', 'domain', 'difficulty', 'status']
+        fields = ['title', 'subject', 'domain', 'difficulty']
 
     def __init__(self, *args, user=None, **kwargs):
         super().__init__(*args, **kwargs)
-        self.fields['status'].initial = 'draft'
 
         if user and hasattr(user, 'teacherprofile') and user.teacherprofile.domain:
             self.fields['domain'].queryset = self.fields['domain'].queryset.filter(

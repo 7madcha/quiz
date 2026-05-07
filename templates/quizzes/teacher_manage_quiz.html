@@ -10,14 +10,52 @@
                 <span class="badge text-bg-light border">Subject: {{ quiz.subject }}</span>
                 <span class="badge text-bg-light border">Domain: {{ quiz.domain }}</span>
                 <span class="badge text-bg-light border">Difficulty: {{ quiz.difficulty }}</span>
-                <span class="badge text-bg-primary">Status: {{ quiz.status }}</span>
+                {% if quiz.status == 'published' %}
+                    <span class="badge text-bg-success">Status: {{ quiz.get_status_display }}</span>
+                {% elif quiz.status == 'pending' %}
+                    <span class="badge text-bg-warning">Status: {{ quiz.get_status_display }}</span>
+                {% elif quiz.status == 'rejected' %}
+                    <span class="badge text-bg-danger">Status: {{ quiz.get_status_display }}</span>
+                {% elif quiz.status == 'approved' %}
+                    <span class="badge text-bg-primary">Status: {{ quiz.get_status_display }}</span>
+                {% else %}
+                    <span class="badge text-bg-light border">Status: {{ quiz.get_status_display }}</span>
+                {% endif %}
             </div>
         </div>
-        <a class="btn btn-primary" href="{% url 'quizzes:teacher_add_question' quiz.id %}">
-            <i class="bi bi-plus-circle me-2"></i>Add question
-        </a>
+        <div class="d-flex flex-wrap gap-2">
+            {% if quiz.status == 'published' %}
+                <form method="post" action="{% url 'quizzes:teacher_unpublish_quiz' quiz.id %}">
+                    {% csrf_token %}
+                    <button type="submit" class="btn btn-outline-primary">
+                        <i class="bi bi-eye-slash me-2"></i>Unpublish
+                    </button>
+                </form>
+            {% else %}
+                <form method="post" action="{% url 'quizzes:teacher_publish_quiz' quiz.id %}">
+                    {% csrf_token %}
+                    <button type="submit" class="btn btn-success">
+                        <i class="bi bi-send-check me-2"></i>Publish
+                    </button>
+                </form>
+            {% endif %}
+            <a class="btn btn-primary" href="{% url 'quizzes:teacher_add_question' quiz.id %}">
+                <i class="bi bi-plus-circle me-2"></i>Add question
+            </a>
+        </div>
     </div>
 </div>
+
+{% if quiz.status != 'published' and publish_issues %}
+    <div class="alert alert-warning border-0 shadow-sm mb-4" role="alert">
+        <div class="fw-bold mb-2"><i class="bi bi-exclamation-triangle me-2"></i>This quiz cannot be published yet.</div>
+        <ul class="mb-0">
+            {% for issue in publish_issues %}
+                <li>{{ issue }}</li>
+            {% endfor %}
+        </ul>
+    </div>
+{% endif %}
 
 <div class="d-flex align-items-center justify-content-between mb-3">
     <h3 class="h5 fw-bold mb-0">Questions</h3>
