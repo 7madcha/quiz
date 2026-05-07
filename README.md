@@ -31,6 +31,17 @@ python manage.py createsuperuser
 python manage.py runserver
 ```
 
+
+
+## Groq API setup
+
+Create a Groq API key, then set it in PowerShell before running the server:
+
+```powershell
+$env:GROQ_API_KEY="your_groq_api_key_here"
+..\quizenv\Scripts\python.exe manage.py runserver
+
+
 Open the site at:
 
 ```text
@@ -39,3 +50,4 @@ http://127.0.0.1:8000/
 
 The virtual environment folder, local database data, and local machine settings
 should not be committed to GitHub.
+

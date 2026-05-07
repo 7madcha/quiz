@@ -48,7 +48,7 @@
         <div class="d-flex flex-column flex-md-row align-items-md-center justify-content-between gap-2 py-3 border-top">
             <div>
                 <div class="fw-bold">{{ quiz.title }}</div>
-                <span class="badge text-bg-light border">{{ quiz.status }}</span>
+                <span class="badge text-bg-light border">{{ quiz.get_status_display }}</span>
             </div>
             <a class="btn btn-light border btn-sm" href="{% url 'quizzes:teacher_manage_quiz' quiz.id %}">
                 <i class="bi bi-sliders me-1"></i>Manage

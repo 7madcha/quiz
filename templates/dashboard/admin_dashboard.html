@@ -12,7 +12,7 @@
     </a>
 </div>
 
-<div class="row g-4">
+<div class="row g-4 mb-4">
     <div class="col-md-4">
         <div class="stat-card lift-hover">
             <div class="d-flex align-items-center justify-content-between">
@@ -44,6 +44,80 @@
                 </div>
                 <span class="icon-pill"><i class="bi bi-activity"></i></span>
             </div>
+        </div>
+    </div>
+</div>
+
+<div class="row g-4">
+    <div class="col-lg-8">
+        <div class="content-card p-3 p-md-4 h-100">
+            <div class="d-flex align-items-center justify-content-between mb-3">
+                <h3 class="h5 fw-bold mb-0">Teacher approval requests</h3>
+                <span class="badge text-bg-light border">{{ pending_teachers|length }} pending</span>
+            </div>
+
+            {% if pending_teachers %}
+                <div class="table-responsive">
+                    <table class="table align-middle mb-0">
+                        <thead>
+                            <tr>
+                                <th>Teacher</th>
+                                <th>Domain</th>
+                                <th>Status</th>
+                                <th class="text-end">Action</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for profile in pending_teachers %}
+                                <tr>
+                                    <td class="fw-bold">{{ profile.user.username }}</td>
+                                    <td>{{ profile.domain|default:"No domain" }}</td>
+                                    <td><span class="badge text-bg-warning">{{ profile.get_status_display }}</span></td>
+                                    <td class="text-end">
+                                        <div class="d-flex justify-content-end gap-2">
+                                            <form method="post" action="{% url 'dashboard:approve_teacher' profile.id %}">
+                                                {% csrf_token %}
+                                                <button class="btn btn-success btn-sm" type="submit">
+                                                    <i class="bi bi-check2-circle me-1"></i>Approve
+                                                </button>
+                                            </form>
+                                            <form method="post" action="{% url 'dashboard:reject_teacher' profile.id %}">
+                                                {% csrf_token %}
+                                                <button class="btn btn-outline-danger btn-sm" type="submit">
+                                                    <i class="bi bi-x-circle me-1"></i>Reject
+                                                </button>
+                                            </form>
+                                        </div>
+                                    </td>
+                                </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            {% else %}
+                <div class="empty-state text-center p-5 shadow-none">
+                    <span class="icon-pill mb-3"><i class="bi bi-person-check"></i></span>
+                    <h4 class="h5 fw-bold">No teacher requests pending.</h4>
+                    <p class="text-muted-soft mb-0">New teacher registration requests will appear here.</p>
+                </div>
+            {% endif %}
+        </div>
+    </div>
+
+    <div class="col-lg-4">
+        <div class="content-card p-3 p-md-4 h-100">
+            <h3 class="h5 fw-bold mb-3">Recently approved teachers</h3>
+            {% for profile in approved_teachers %}
+                <div class="d-flex align-items-center justify-content-between gap-3 py-3 border-top">
+                    <div>
+                        <div class="fw-bold">{{ profile.user.username }}</div>
+                        <div class="text-muted-soft small">{{ profile.domain|default:"No domain" }}</div>
+                    </div>
+                    <span class="badge text-bg-success">{{ profile.get_status_display }}</span>
+                </div>
+            {% empty %}
+                <p class="text-muted-soft mb-0">No approved teachers yet.</p>
+            {% endfor %}
         </div>
     </div>
 </div>

@@ -1,8 +1,10 @@
+from functools import wraps
 
-from django.contrib.auth.decorators import login_required
 from django.contrib import messages
-from django.views.decorators.http import require_POST
+from django.contrib.auth.decorators import login_required
+from django.db.models import Q
 from django.shortcuts import get_object_or_404, redirect, render
+from django.views.decorators.http import require_POST
 
 from accounts.models import TeacherProfile
 from .forms import ChoiceForm, QuestionForm, QuizForm
@@ -18,8 +20,10 @@ def user_is_approved_teacher(user):
 
 def teacher_required(view_func):
     @login_required
+    @wraps(view_func)
     def wrapper(request, *args, **kwargs):
         if not user_is_approved_teacher(request.user):
+            messages.error(request, 'You need an approved teacher account to access that page.')
             return redirect('dashboard:home')
         return view_func(request, *args, **kwargs)
 
@@ -36,6 +40,17 @@ def get_teacher_pending_ai_quiz(user, quiz_id):
         is_ai_generated=True,
         status='pending',
         domain=user.teacherprofile.domain,
+    )
+
+
+def get_teacher_manageable_quizzes(user):
+    return Quiz.objects.filter(
+        Q(created_by=user) |
+        Q(
+            is_ai_generated=True,
+            domain=user.teacherprofile.domain,
+            status__in=['approved', 'published'],
+        )
     )
 
 
@@ -76,9 +91,10 @@ def quiz_detail(request, quiz_id):
 
 @teacher_required
 def teacher_quiz_list(request):
-    quizzes = Quiz.objects.filter(
-        created_by=request.user
-    ).select_related('domain').order_by('-created_at')
+    quizzes = get_teacher_manageable_quizzes(request.user).select_related(
+        'domain',
+        'created_by',
+    ).order_by('-created_at')
 
     return render(request, 'quizzes/teacher_quiz_list.html', {
         'quizzes': quizzes,
@@ -95,6 +111,7 @@ def teacher_create_quiz(request):
             quiz.is_ai_generated = False
             quiz.status = 'draft'
             quiz.save()
+            messages.success(request, 'Quiz created. Add questions and choices before publishing.')
             return redirect('quizzes:teacher_manage_quiz', quiz_id=quiz.id)
     else:
         form = QuizForm(user=request.user)
@@ -107,12 +124,11 @@ def teacher_create_quiz(request):
 @teacher_required
 def teacher_manage_quiz(request, quiz_id):
     quiz = get_object_or_404(
-        Quiz.objects.select_related('domain').prefetch_related(
+        get_teacher_manageable_quizzes(request.user).select_related('domain', 'created_by').prefetch_related(
             'questions',
             'questions__choices',
         ),
         id=quiz_id,
-        created_by=request.user,
     )
 
     return render(request, 'quizzes/teacher_manage_quiz.html', {
@@ -125,9 +141,8 @@ def teacher_manage_quiz(request, quiz_id):
 @require_POST
 def teacher_publish_quiz(request, quiz_id):
     quiz = get_object_or_404(
-        Quiz.objects.prefetch_related('questions', 'questions__choices'),
+        get_teacher_manageable_quizzes(request.user).prefetch_related('questions', 'questions__choices'),
         id=quiz_id,
-        created_by=request.user,
     )
 
     if quiz.status not in ['draft', 'approved']:
@@ -148,7 +163,7 @@ def teacher_publish_quiz(request, quiz_id):
 @teacher_required
 @require_POST
 def teacher_unpublish_quiz(request, quiz_id):
-    quiz = get_object_or_404(Quiz, id=quiz_id, created_by=request.user)
+    quiz = get_object_or_404(get_teacher_manageable_quizzes(request.user), id=quiz_id)
 
     if quiz.status != 'published':
         messages.error(request, 'Only published quizzes can be unpublished.')
@@ -162,7 +177,7 @@ def teacher_unpublish_quiz(request, quiz_id):
 
 @teacher_required
 def teacher_add_question(request, quiz_id):
-    quiz = get_object_or_404(Quiz, id=quiz_id, created_by=request.user)
+    quiz = get_object_or_404(get_teacher_manageable_quizzes(request.user), id=quiz_id)
 
     if request.method == 'POST':
         form = QuestionForm(request.POST)
@@ -170,6 +185,7 @@ def teacher_add_question(request, quiz_id):
             question = form.save(commit=False)
             question.quiz = quiz
             question.save()
+            messages.success(request, 'Question added.')
             return redirect('quizzes:teacher_manage_quiz', quiz_id=quiz.id)
     else:
         form = QuestionForm()
@@ -185,7 +201,7 @@ def teacher_add_choice(request, question_id):
     question = get_object_or_404(
         Question.objects.select_related('quiz'),
         id=question_id,
-        quiz__created_by=request.user,
+        quiz__in=get_teacher_manageable_quizzes(request.user),
     )
 
     if request.method == 'POST':
@@ -194,6 +210,7 @@ def teacher_add_choice(request, question_id):
             choice = form.save(commit=False)
             choice.question = question
             choice.save()
+            messages.success(request, 'Choice added.')
             return redirect('quizzes:teacher_manage_quiz', quiz_id=question.quiz.id)
     else:
         form = ChoiceForm()
@@ -232,8 +249,8 @@ def teacher_approve_ai_quiz(request, quiz_id):
     quiz = get_teacher_pending_ai_quiz(request.user, quiz_id)
     quiz.status = 'approved'
     quiz.save(update_fields=['status'])
-    messages.success(request, 'AI quiz approved.')
-    return redirect('quizzes:teacher_ai_pending')
+    messages.success(request, 'AI quiz approved. Publish it when it is ready for students.')
+    return redirect('quizzes:teacher_manage_quiz', quiz_id=quiz.id)
 
 
 @teacher_required

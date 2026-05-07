@@ -31,11 +31,17 @@
                     {% for attempt in attempts %}
                         <tr>
                             <td class="fw-bold">{{ attempt.quiz.title }}</td>
-                            <td>{{ attempt.quiz.domain.name }}</td>
-                            <td><span class="badge text-bg-light border">{{ attempt.quiz.difficulty }}</span></td>
+                            <td>
+                                {% if attempt.quiz.domain %}
+                                    {{ attempt.quiz.domain.name }}
+                                {% else %}
+                                    No domain
+                                {% endif %}
+                            </td>
+                            <td><span class="badge text-bg-light border">{{ attempt.quiz.get_difficulty_display }}</span></td>
                             <td>{{ attempt.score }}</td>
-                            <td><span class="badge text-bg-primary">{{ attempt.status }}</span></td>
-                            <td>{{ attempt.submitted_at }}</td>
+                            <td><span class="badge text-bg-primary">{{ attempt.get_status_display }}</span></td>
+                            <td>{{ attempt.submitted_at|default:"Not submitted" }}</td>
                             <td class="text-end">
                                 <a class="btn btn-light border btn-sm" href="{% url 'attempts:quiz_result' attempt.id %}">
                                     <i class="bi bi-eye me-1"></i>View correction
@@ -50,7 +56,7 @@
 {% else %}
     <div class="empty-state text-center p-5">
         <span class="icon-pill mb-3"><i class="bi bi-inbox"></i></span>
-        <h3 class="h5 fw-bold">No completed quizzes yet</h3>
+        <h3 class="h5 fw-bold">No results yet.</h3>
         <p class="text-muted-soft mb-3">Complete a quiz to see your score history here.</p>
         <a class="btn btn-primary" href="{% url 'quizzes:quiz_list' %}">Browse quizzes</a>
     </div>

@@ -15,7 +15,7 @@
 {% if total_attempts == 0 %}
     <div class="empty-state text-center p-5">
         <span class="icon-pill mb-3"><i class="bi bi-graph-up"></i></span>
-        <h3 class="h5 fw-bold">No progress data yet</h3>
+        <h3 class="h5 fw-bold">No results yet.</h3>
         <p class="text-muted-soft mb-3">Pass your first quiz to see statistics and recommendations.</p>
         <a class="btn btn-primary" href="{% url 'quizzes:quiz_list' %}">Go to quizzes</a>
     </div>
@@ -62,7 +62,7 @@
                             <td>{{ item.domain }}</td>
                             <td>{{ item.score }} / {{ item.total_points }}</td>
                             <td><span class="badge text-bg-primary">{{ item.percentage }}%</span></td>
-                            <td>{{ item.submitted_at }}</td>
+                            <td>{{ item.submitted_at|default:"Not submitted" }}</td>
                             <td class="text-end">
                                 <a class="btn btn-light border btn-sm" href="{% url 'attempts:quiz_result' item.attempt.id %}">
                                     <i class="bi bi-eye me-1"></i>View correction
@@ -113,7 +113,7 @@
                     <p class="text-muted-soft">These are the domains where your average score is the lowest.</p>
                     <div class="d-flex flex-column gap-3">
                         {% for domain in weak_domains %}
-                            <div class="p-3 bg-light rounded-4">
+                            <div class="p-3 bg-light rounded">
                                 <div class="d-flex align-items-center justify-content-between gap-3">
                                     <div>
                                         <div class="fw-bold">{{ domain.domain }}</div>

@@ -15,10 +15,10 @@
             <div class="quiz-card lift-hover h-100 p-4">
                 <div class="d-flex align-items-start justify-content-between gap-3 mb-3">
                     <span class="icon-pill"><i class="bi bi-stars"></i></span>
-                    <span class="badge text-bg-warning">{{ quiz.status }}</span>
+                    <span class="badge text-bg-warning">{{ quiz.get_status_display }}</span>
                 </div>
                 <h3 class="h5 fw-bold mb-2">{{ quiz.title }}</h3>
-                <p class="text-muted-soft mb-3">{{ quiz.subject }} · {{ quiz.difficulty }} · {{ quiz.domain }}</p>
+                <p class="text-muted-soft mb-3">{{ quiz.subject }} - {{ quiz.get_difficulty_display }} - {{ quiz.domain|default:"No domain" }}</p>
                 <a class="btn btn-primary btn-sm" href="{% url 'quizzes:teacher_review_ai_quiz' quiz.id %}">
                     <i class="bi bi-search me-1"></i>Review
                 </a>
@@ -28,7 +28,7 @@
         <div class="col-12">
             <div class="empty-state text-center p-5">
                 <span class="icon-pill mb-3"><i class="bi bi-check2-circle"></i></span>
-                <h3 class="h5 fw-bold">No pending AI quizzes</h3>
+                <h3 class="h5 fw-bold">No AI quizzes pending validation.</h3>
                 <p class="text-muted-soft mb-0">Generated quizzes for your domain will appear here for validation.</p>
             </div>
         </div>

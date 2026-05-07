@@ -8,9 +8,9 @@
             <h2 class="page-title mt-2 mb-3">{{ quiz.title }}</h2>
             <div class="d-flex flex-wrap gap-2">
                 <span class="badge text-bg-light border">Subject: {{ quiz.subject }}</span>
-                <span class="badge text-bg-light border">Difficulty: {{ quiz.difficulty }}</span>
-                <span class="badge text-bg-light border">Domain: {{ quiz.domain }}</span>
-                <span class="badge text-bg-warning">Status: {{ quiz.status }}</span>
+                <span class="badge text-bg-light border">Difficulty: {{ quiz.get_difficulty_display }}</span>
+                <span class="badge text-bg-light border">Domain: {{ quiz.domain|default:"No domain" }}</span>
+                <span class="badge text-bg-warning">Status: {{ quiz.get_status_display }}</span>
             </div>
         </div>
         <div class="d-flex flex-wrap gap-2">
@@ -59,7 +59,7 @@
             <h5 class="fw-bold mb-2">Choices</h5>
             <div class="d-flex flex-column gap-2">
                 {% for choice in question.choices.all %}
-                    <div class="p-3 bg-light rounded-4 d-flex align-items-center justify-content-between gap-3">
+                    <div class="p-3 bg-light rounded d-flex align-items-center justify-content-between gap-3">
                         <span>{{ choice.text }}</span>
                         {% if choice.is_correct %}
                             <span class="badge text-bg-success"><i class="bi bi-check-circle me-1"></i>Correct</span>

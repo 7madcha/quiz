@@ -7,7 +7,7 @@
         <h2 class="page-title mt-2 mb-1">Published quizzes</h2>
         <p class="text-muted-soft mb-0">Choose a quiz and start practicing immediately.</p>
     </div>
-    {% if user.is_authenticated %}
+    {% if is_student %}
         <a class="btn btn-outline-primary" href="{% url 'attempts:my_progress' %}">
             <i class="bi bi-graph-up-arrow me-2"></i>My progress
         </a>
@@ -20,12 +20,12 @@
             <div class="quiz-card lift-hover h-100 p-4">
                 <div class="d-flex align-items-start justify-content-between gap-3 mb-3">
                     <span class="icon-pill"><i class="bi bi-journal-check"></i></span>
-                    <span class="badge text-bg-primary">{{ quiz.difficulty }}</span>
+                    <span class="badge text-bg-primary">{{ quiz.get_difficulty_display }}</span>
                 </div>
                 <h3 class="h5 fw-bold mb-2">{{ quiz.title }}</h3>
                 <p class="text-muted-soft mb-3">Subject: {{ quiz.subject }}</p>
                 <div class="d-flex align-items-center justify-content-between gap-2">
-                    <span class="badge text-bg-light border">{{ quiz.domain }}</span>
+                    <span class="badge text-bg-light border">{{ quiz.domain|default:"No domain" }}</span>
                     <a class="btn btn-primary btn-sm" href="{% url 'quizzes:quiz_detail' quiz.id %}">
                         View quiz<i class="bi bi-arrow-right ms-1"></i>
                     </a>

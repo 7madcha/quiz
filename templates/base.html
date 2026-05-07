@@ -26,19 +26,17 @@
                     <li class="nav-item">
                         <a class="nav-link" href="{% url 'home' %}"><i class="bi bi-house-door me-1"></i>Home</a>
                     </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="{% url 'quizzes:quiz_list' %}"><i class="bi bi-journal-check me-1"></i>Quizzes</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="{% url 'ai_generator:generate_quiz' %}"><i class="bi bi-stars me-1"></i>Generate AI Quiz</a>
-                    </li>
 
                     {% if user.is_authenticated %}
                         <li class="nav-item">
                             <a class="nav-link" href="{% url 'dashboard:home' %}"><i class="bi bi-speedometer2 me-1"></i>Dashboard</a>
                         </li>
 
-                        {% if is_approved_teacher %}
+                        {% if is_platform_admin %}
+                            <li class="nav-item">
+                                <a class="nav-link" href="/admin/"><i class="bi bi-shield-lock me-1"></i>Django Admin</a>
+                            </li>
+                        {% elif is_approved_teacher %}
                             <li class="nav-item">
                                 <a class="nav-link" href="{% url 'quizzes:teacher_quiz_list' %}"><i class="bi bi-easel2 me-1"></i>Teacher Quizzes</a>
                             </li>
@@ -47,12 +45,21 @@
                             </li>
                         {% else %}
                             <li class="nav-item">
+                                <a class="nav-link" href="{% url 'quizzes:quiz_list' %}"><i class="bi bi-journal-check me-1"></i>Quizzes</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" href="{% url 'ai_generator:generate_quiz' %}"><i class="bi bi-stars me-1"></i>Generate AI Quiz</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" href="{% url 'attempts:my_results' %}"><i class="bi bi-award me-1"></i>My Results</a>
+                            </li>
+                            <li class="nav-item">
                                 <a class="nav-link" href="{% url 'attempts:my_progress' %}"><i class="bi bi-graph-up-arrow me-1"></i>My Progress</a>
                             </li>
                         {% endif %}
-
+                    {% else %}
                         <li class="nav-item">
-                            <a class="nav-link" href="{% url 'attempts:my_results' %}"><i class="bi bi-award me-1"></i>My Results</a>
+                            <a class="nav-link" href="{% url 'quizzes:quiz_list' %}"><i class="bi bi-journal-check me-1"></i>Quizzes</a>
                         </li>
                     {% endif %}
                 </ul>
@@ -81,8 +88,8 @@
             {% if messages %}
                 <div class="mb-4">
                     {% for message in messages %}
-                        <div class="alert alert-info border-0 shadow-sm mb-2" role="alert">
-                            <i class="bi bi-info-circle me-2"></i>{{ message }}
+                        <div class="alert {% if message.tags == 'success' %}alert-success{% elif message.tags == 'error' %}alert-danger{% elif message.tags == 'warning' %}alert-warning{% else %}alert-info{% endif %} border-0 shadow-sm mb-2" role="alert">
+                            <i class="bi {% if message.tags == 'success' %}bi-check-circle{% elif message.tags == 'error' %}bi-exclamation-circle{% elif message.tags == 'warning' %}bi-exclamation-triangle{% else %}bi-info-circle{% endif %} me-2"></i>{{ message }}
                         </div>
                     {% endfor %}
                 </div>

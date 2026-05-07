@@ -23,13 +23,13 @@
                 <div class="col-sm-4">
                     <div class="stat-card shadow-none">
                         <div class="text-muted-soft small fw-bold text-uppercase">Difficulty</div>
-                        <div class="fw-bold">{{ quiz.difficulty }}</div>
+                        <div class="fw-bold">{{ quiz.get_difficulty_display }}</div>
                     </div>
                 </div>
                 <div class="col-sm-4">
                     <div class="stat-card shadow-none">
-                        <div class="text-muted-soft small fw-bold text-uppercase">Status</div>
-                        <div class="fw-bold">{{ quiz.status }}</div>
+                        <div class="text-muted-soft small fw-bold text-uppercase">Questions</div>
+                        <div class="fw-bold">{{ quiz.questions.all|length }}</div>
                     </div>
                 </div>
             </div>
