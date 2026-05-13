@@ -2,6 +2,7 @@
 # Create your views here.
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
+from django.db.models import Q
 from django.shortcuts import get_object_or_404, redirect, render
 from django.views.decorators.http import require_POST
 
@@ -49,8 +50,21 @@ def teacher_dashboard(request):
         return redirect('dashboard:learner_dashboard')
 
     quizzes = Quiz.objects.filter(
-        created_by=request.user
-    ).order_by('-created_at')[:10]
+        domain=request.user.teacherprofile.domain,
+    ).select_related('domain').order_by('-created_at')[:10]
+
+    manageable_ids = set(
+        Quiz.objects.filter(
+            Q(created_by=request.user) |
+            Q(
+                is_ai_generated=True,
+                domain=request.user.teacherprofile.domain,
+                status__in=['approved', 'published'],
+            )
+        ).values_list('id', flat=True)
+    )
+    for quiz in quizzes:
+        quiz.can_manage = quiz.id in manageable_ids
 
     return render(request, 'dashboard/teacher_dashboard.html', {
         'quizzes': quizzes,

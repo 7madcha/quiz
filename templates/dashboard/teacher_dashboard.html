@@ -16,8 +16,8 @@
     <div class="col-md-4">
         <a class="content-card lift-hover d-block h-100 p-4" href="{% url 'quizzes:teacher_quiz_list' %}">
             <span class="icon-pill mb-3"><i class="bi bi-easel2"></i></span>
-            <h3 class="h5 fw-bold text-dark">My quizzes</h3>
-            <p class="text-muted-soft mb-0">Review and manage quizzes you created.</p>
+            <h3 class="h5 fw-bold text-dark">Domain quizzes</h3>
+            <p class="text-muted-soft mb-0">Review quizzes and student results in your domain.</p>
         </a>
     </div>
     <div class="col-md-4">
@@ -38,7 +38,7 @@
 
 <div class="content-card p-4">
     <div class="d-flex align-items-center justify-content-between mb-3">
-        <h3 class="h5 fw-bold mb-0">Recent quizzes</h3>
+        <h3 class="h5 fw-bold mb-0">Recent domain quizzes</h3>
         <a class="btn btn-outline-primary btn-sm" href="{% url 'quizzes:teacher_quiz_list' %}">
             <i class="bi bi-grid me-1"></i>View all
         </a>
@@ -50,15 +50,22 @@
                 <div class="fw-bold">{{ quiz.title }}</div>
                 <span class="badge text-bg-light border">{{ quiz.get_status_display }}</span>
             </div>
-            <a class="btn btn-light border btn-sm" href="{% url 'quizzes:teacher_manage_quiz' quiz.id %}">
-                <i class="bi bi-sliders me-1"></i>Manage
-            </a>
+            <div class="d-flex flex-wrap gap-2">
+                {% if quiz.can_manage %}
+                    <a class="btn btn-light border btn-sm" href="{% url 'quizzes:teacher_manage_quiz' quiz.id %}">
+                        <i class="bi bi-sliders me-1"></i>Manage
+                    </a>
+                {% endif %}
+                <a class="btn btn-light border btn-sm" href="{% url 'quizzes:teacher_quiz_results' quiz.id %}">
+                    <i class="bi bi-graph-up-arrow me-1"></i>Results
+                </a>
+            </div>
         </div>
     {% empty %}
         <div class="empty-state text-center p-5 shadow-none">
             <span class="icon-pill mb-3"><i class="bi bi-folder-plus"></i></span>
-            <h4 class="h5 fw-bold">No quizzes created yet</h4>
-            <p class="text-muted-soft mb-3">Create your first quiz to start building your course content.</p>
+            <h4 class="h5 fw-bold">No quizzes in your domain yet</h4>
+            <p class="text-muted-soft mb-3">Create the first quiz for your teaching domain.</p>
             <a class="btn btn-primary" href="{% url 'quizzes:teacher_create_quiz' %}">Create quiz</a>
         </div>
     {% endfor %}

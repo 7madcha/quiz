@@ -1,0 +1,106 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="content-card p-4 p-md-5 mb-4">
+    <div class="d-flex flex-column flex-lg-row align-items-lg-center justify-content-between gap-3">
+        <div>
+            <span class="eyebrow">Student progress</span>
+            <h2 class="page-title mt-2 mb-1">{{ quiz.title }}</h2>
+            <p class="text-muted-soft mb-0">Attempts and answers from students in your domain.</p>
+        </div>
+        <a class="btn btn-outline-primary" href="{% url 'quizzes:teacher_quiz_list' %}">
+            <i class="bi bi-arrow-left me-2"></i>Back to domain quizzes
+        </a>
+    </div>
+</div>
+
+<div class="row g-4 mb-4">
+    <div class="col-md-4">
+        <div class="stat-card lift-hover">
+            <div class="text-muted-soft small fw-bold text-uppercase">Student attempts</div>
+            <div class="stat-value">{{ total_attempts }}</div>
+        </div>
+    </div>
+    <div class="col-md-4">
+        <div class="stat-card lift-hover">
+            <div class="text-muted-soft small fw-bold text-uppercase">Average score</div>
+            <div class="stat-value">{{ average_percentage }}%</div>
+        </div>
+    </div>
+    <div class="col-md-4">
+        <div class="stat-card lift-hover">
+            <div class="text-muted-soft small fw-bold text-uppercase">Best score</div>
+            <div class="stat-value">{{ best_percentage }}%</div>
+        </div>
+    </div>
+</div>
+
+<div class="d-flex flex-column gap-4">
+    {% for row in attempt_rows %}
+        <div class="question-card p-4">
+            <div class="d-flex flex-column flex-lg-row justify-content-between gap-3 mb-3">
+                <div>
+                    <h3 class="h5 fw-bold mb-1">{{ row.attempt.user.username }}</h3>
+                    <p class="text-muted-soft mb-0">{{ row.attempt.submitted_at|default:row.attempt.started_at }}</p>
+                </div>
+                <div class="text-lg-end">
+                    <span class="badge text-bg-primary">{{ row.attempt.score }} / {{ row.total_points }}</span>
+                    <span class="badge text-bg-light border">{{ row.percentage }}%</span>
+                    <span class="badge text-bg-light border">{{ row.attempt.get_status_display }}</span>
+                </div>
+            </div>
+
+            <div class="progress mb-4">
+                <div class="progress-bar" role="progressbar" style="width: {{ row.percentage }}%;" aria-valuenow="{{ row.percentage }}" aria-valuemin="0" aria-valuemax="100"></div>
+            </div>
+
+            <div class="table-responsive">
+                <table class="table align-middle mb-0">
+                    <thead>
+                        <tr>
+                            <th>Question</th>
+                            <th>Student answer</th>
+                            <th>Correct answer</th>
+                            <th>Result</th>
+                            <th>Points</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for answer in row.answers %}
+                            <tr>
+                                <td class="fw-bold">{{ answer.question.text }}</td>
+                                <td>
+                                    {% if answer.selected_choice %}
+                                        {{ answer.selected_choice.text }}
+                                    {% else %}
+                                        No answer
+                                    {% endif %}
+                                </td>
+                                <td>{{ answer.question.correct_answer }}</td>
+                                <td>
+                                    {% if answer.is_correct %}
+                                        <span class="badge text-bg-success"><i class="bi bi-check-circle me-1"></i>Correct</span>
+                                    {% else %}
+                                        <span class="badge text-bg-danger"><i class="bi bi-x-circle me-1"></i>Wrong</span>
+                                    {% endif %}
+                                </td>
+                                <td>{{ answer.score }} / {{ answer.question.points }}</td>
+                            </tr>
+                        {% empty %}
+                            <tr>
+                                <td colspan="5" class="text-muted-soft">No answers saved for this attempt.</td>
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    {% empty %}
+        <div class="empty-state text-center p-5">
+            <span class="icon-pill mb-3"><i class="bi bi-inbox"></i></span>
+            <h3 class="h5 fw-bold">No student attempts yet</h3>
+            <p class="text-muted-soft mb-0">Student scores and answers will appear here after they take this quiz.</p>
+        </div>
+    {% endfor %}
+</div>
+{% endblock %}

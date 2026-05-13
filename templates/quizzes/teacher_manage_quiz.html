@@ -24,6 +24,9 @@
             </div>
         </div>
         <div class="d-flex flex-wrap gap-2">
+            <a class="btn btn-light border" href="{% url 'quizzes:teacher_quiz_results' quiz.id %}">
+                <i class="bi bi-graph-up-arrow me-2"></i>Results
+            </a>
             {% if quiz.status == 'published' %}
                 <form method="post" action="{% url 'quizzes:teacher_unpublish_quiz' quiz.id %}">
                     {% csrf_token %}
@@ -79,11 +82,24 @@
 
             <div class="d-flex flex-column gap-2">
                 {% for choice in question.choices.all %}
-                    <div class="p-3 bg-light rounded d-flex align-items-center justify-content-between gap-3">
-                        <span>{{ choice.text }}</span>
-                        {% if choice.is_correct %}
-                            <span class="badge text-bg-success"><i class="bi bi-check-circle me-1"></i>Correct</span>
-                        {% endif %}
+                    <div class="p-3 bg-light rounded d-flex flex-column flex-md-row align-items-md-center justify-content-between gap-3">
+                        <div class="d-flex align-items-center gap-2">
+                            <span>{{ choice.text }}</span>
+                            {% if choice.is_correct %}
+                                <span class="badge text-bg-success"><i class="bi bi-check-circle me-1"></i>Correct</span>
+                            {% endif %}
+                        </div>
+                        <div class="d-flex flex-wrap gap-2">
+                            <a class="btn btn-light border btn-sm" href="{% url 'quizzes:teacher_edit_choice' choice.id %}">
+                                <i class="bi bi-pencil-square me-1"></i>Modify
+                            </a>
+                            <form method="post" action="{% url 'quizzes:teacher_delete_choice' choice.id %}">
+                                {% csrf_token %}
+                                <button type="submit" class="btn btn-outline-danger btn-sm">
+                                    <i class="bi bi-trash me-1"></i>Delete
+                                </button>
+                            </form>
+                        </div>
                     </div>
                 {% empty %}
                     <p class="text-muted-soft mb-0">No choices yet.</p>
